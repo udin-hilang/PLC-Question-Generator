@@ -1,13 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import '../assets/Layout.css';
 import { supabase } from '../lib/supabaseClient';
+import { Offcanvas } from 'bootstrap';
 
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [user, setUser] = useState(null);
+  const offcanvasRef = useRef(null);
+  const offcanvasInstance = useRef(null);
+
+  useEffect(() => {
+    // Initialize Bootstrap Offcanvas
+    if (offcanvasRef.current) {
+      offcanvasInstance.current = new Offcanvas(offcanvasRef.current);
+    }
+  }, []);
 
   useEffect(() => {
     // Check current session
@@ -41,6 +51,12 @@ const Layout = () => {
     navigate('/');
   };
 
+  const toggleOffcanvas = () => {
+    if (offcanvasInstance.current) {
+      offcanvasInstance.current.toggle();
+    }
+  };
+
   const isActive = (path) => location.pathname === path ? 'active' : '';
 
   const getThemeClass = () => {
@@ -59,7 +75,7 @@ const Layout = () => {
             <div className="brand-subtext">by udin_hilang</div>
           </Link>
 
-          <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+          <button className="navbar-toggler" type="button" onClick={toggleOffcanvas} aria-controls="offcanvasNavbar">
             <span className="navbar-toggler-icon"></span>
           </button>
 
@@ -104,7 +120,13 @@ const Layout = () => {
         </div>
 
         {/* Mobile Sidebar (Offcanvas) */}
-        <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div 
+          className="offcanvas offcanvas-end" 
+          tabIndex="-1" 
+          id="offcanvasNavbar" 
+          ref={offcanvasRef}
+          aria-labelledby="offcanvasNavbarLabel"
+        >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title brand-logo" id="offcanvasNavbarLabel">PLC Question Generator</h5>
             <button type="button" className="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
