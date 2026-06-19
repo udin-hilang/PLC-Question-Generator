@@ -274,7 +274,7 @@ const Generator = () => {
 
               {/* I/O Section */}
               <div className="col-12">
-                <div className="input-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                <div className="input-grid-3">
                   <NumberStepper
                     label="Jumlah Input (I/O)"
                     name="inputCount"

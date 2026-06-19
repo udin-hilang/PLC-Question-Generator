@@ -211,3 +211,39 @@
 .nav-link-custom:hover, .nav-link-custom.active {
     color: #ffffff;
 }
+
+/* Mobile Responsiveness for Layout */
+@media (max-width: 991.98px) {
+    .main-content {
+        padding-top: 120px;
+    }
+    
+    .navbar-custom {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    .brand-logo-container {
+        padding: 10px 20px;
+        margin-bottom: 0.5rem;
+    }
+    
+    .brand-logo {
+        font-size: 1.3rem;
+    }
+
+    .navbar-nav {
+        padding: 1rem 0;
+        text-align: center;
+        gap: 1rem !important;
+    }
+    
+    .nav-item {
+        width: 100%;
+    }
+    
+    .btn-glass {
+        width: 100%;
+        text-align: center;
+    }
+}

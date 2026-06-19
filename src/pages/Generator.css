@@ -188,9 +188,16 @@
     gap: 1.5rem;
 }
 
+.input-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
 @media (max-width: 768px) {
-    .input-grid {
+    .input-grid, .input-grid-3 {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 }
 
@@ -408,6 +415,21 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+/* Mobile Responsiveness for Saved Page */
+@media (max-width: 991.98px) {
+    .saved-item-card:hover {
+        transform: none;
+    }
+    
+    .saved-item-title {
+        font-size: 0.9rem;
+    }
+
+    .config-summary {
+        font-size: 0.85rem;
+    }
 }
 
 .saved-item-card:hover {
