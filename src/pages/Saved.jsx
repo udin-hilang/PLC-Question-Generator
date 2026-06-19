@@ -7,6 +7,7 @@ import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, Width
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import Mermaid from '../components/Mermaid';
 import '../pages/Generator.css'; // Use existing styles for consistency
+import { supabase } from '../lib/supabaseClient';
 
 const Saved = () => {
   const navigate = useNavigate();
@@ -17,21 +18,62 @@ const Saved = () => {
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem('saved_plc_questions') || '[]');
-    setSavedQuestions(data);
+    const checkUserAndFetch = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        alert('Please login to view your saved questions!');
+        navigate('/auth');
+        return;
+      }
+      fetchSavedQuestions();
+    };
+
+    checkUserAndFetch();
   }, []);
 
-  const deleteQuestion = (id) => {
+  const fetchSavedQuestions = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('saved_questions')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const mappedData = data.map(item => ({
+        id: item.id,
+        ...item.question_data
+      }));
+
+      setSavedQuestions(mappedData);
+    } catch (error) {
+      console.error('Error fetching saved questions:', error);
+      alert('Failed to load saved questions from database.');
+    }
+  };
+
+  const deleteQuestion = async (id) => {
     if (window.confirm('Are you sure you want to delete this saved question?')) {
-      const updated = savedQuestions.filter(q => q.id !== id);
-      setSavedQuestions(updated);
-      localStorage.setItem('saved_plc_questions', JSON.stringify(updated));
+      try {
+        const { error } = await supabase
+          .from('saved_questions')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+
+        setSavedQuestions(prev => prev.filter(q => q.id !== id));
+        if (selectedId === id) setSelectedId(null);
+      } catch (error) {
+        console.error('Error deleting question:', error);
+        alert('Failed to delete question: ' + error.message);
+      }
     }
   };
 
   const handleEditSubmit = async () => {
     if (!editPrompt.trim()) return;
-    
+
     const selectedQuestion = savedQuestions.find(q => q.id === selectedId);
     if (!selectedQuestion) return;
 
@@ -40,7 +82,7 @@ const Saved = () => {
       const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
       const MODEL = import.meta.env.VITE_GEMINI_MODEL || 'gemini-1.5-flash';
       const ENDPOINT = import.meta.env.VITE_GEMINI_API_ENDPOINT || 'https://generativelanguage.googleapis.com/v1';
-      
+
       if (!API_KEY) throw new Error('API Key not found. Please add VITE_GEMINI_API_KEY to your .env file.');
 
       const prompt = `You are a PLC Expert. I want to modify a previously generated PLC question.
@@ -74,22 +116,32 @@ Do not include any conversational text. Return ONLY the JSON object.`;
       }
 
       const textResponse = result.candidates[0].content.parts[0].text;
-      
-      // Robust JSON extraction: find first '{' and last '}'
+
       const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error('No JSON found in AI response');
-      
+
       const updatedData = JSON.parse(jsonMatch[0]);
 
-      const updatedQuestions = savedQuestions.map(q => 
+      const { error: updateError } = await supabase
+        .from('saved_questions')
+        .update({ 
+          question_data: { 
+            ...selectedQuestion, 
+            data: updatedData 
+          } 
+        })
+        .eq('id', selectedId);
+
+      if (updateError) throw updateError;
+
+      const updatedQuestions = savedQuestions.map(q =>
         q.id === selectedId ? { ...q, data: updatedData } : q
       );
 
       setSavedQuestions(updatedQuestions);
-      localStorage.setItem('saved_plc_questions', JSON.stringify(updatedQuestions));
       setEditPrompt('');
       setIsEditing(false);
-      alert('Question updated successfully!');
+      alert('Question updated successfully in global database!');
     } catch (error) {
       console.error('Error editing question:', error);
       alert(`Edit failed: ${error.message || 'Please try again'}`);

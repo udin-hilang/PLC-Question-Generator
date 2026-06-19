@@ -3,6 +3,7 @@ import './Generator.css';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import Mermaid from '../components/Mermaid';
 import NumberStepper from '../components/NumberStepper';
+import { supabase } from '../lib/supabaseClient';
 
 const OMRON_INSTRUCTIONS = [
   { id: 'TIM', label: 'Timer (TIM)' },
@@ -53,23 +54,42 @@ const Generator = () => {
     });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!result || !result.data) {
       alert('Nothing to save! Please generate a question first.');
       return;
     }
 
-    const savedQuestions = JSON.parse(localStorage.getItem('saved_plc_questions') || '[]');
-    const newSavedQuestion = {
-      id: Date.now(),
-      date: new Date().toLocaleString(),
-      config: formData,
-      data: result.data
-    };
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        alert('Please login first to save questions!');
+        window.location.href = '/auth';
+        return;
+      }
 
-    savedQuestions.unshift(newSavedQuestion);
-    localStorage.setItem('saved_plc_questions', JSON.stringify(savedQuestions));
-    alert('Question saved successfully to Saved page!');
+      const { error } = await supabase
+        .from('saved_questions')
+        .insert([
+          { 
+            user_id: user.id,
+            question_data: {
+              date: new Date().toLocaleString(),
+              config: formData,
+              data: result.data
+            } 
+          }
+        ])
+        .select();
+
+      if (error) throw error;
+      
+      alert('Question saved successfully to your account!');
+    } catch (error) {
+      console.error('Save Error:', error);
+      alert('Error saving question: ' + error.message);
+    }
   };
 
   const generateQuestion = async (e) => {

@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import '../assets/Layout.css';
+import { supabase } from '../lib/supabaseClient';
 
 const Layout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       if (!isScrolled && currentScrollY > 50) {
@@ -17,8 +30,16 @@ const Layout = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      subscription.unsubscribe();
+    };
   }, [isScrolled]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
 
   const isActive = (path) => location.pathname === path ? 'active' : '';
 
@@ -63,6 +84,20 @@ const Layout = () => {
                 <Link to="/settings" className={`btn btn-sm px-3 btn-glass ${isActive('/settings') ? 'btn-glass-active' : ''}`}>
                   Settings
                 </Link>
+              </li>
+              <li className="nav-item ms-lg-3">
+                {user ? (
+                  <button 
+                    onClick={handleLogout} 
+                    className="btn btn-sm px-3 btn-glass text-danger"
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <Link to="/auth" className={`btn btn-sm px-3 btn-glass ${isActive('/auth') ? 'btn-glass-active' : ''}`}>
+                    Login
+                  </Link>
+                )}
               </li>
             </ul>
           </div>

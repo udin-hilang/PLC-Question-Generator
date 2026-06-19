@@ -1,0 +1,29 @@
+-- ============================================================
+-- FULL SUPABASE DATABASE RESET & SETUP
+-- Run this in the Supabase SQL Editor to recreate the table 
+-- and enable secure user-specific storage.
+-- ============================================================
+
+-- 1. Create the table from scratch
+CREATE TABLE IF NOT EXISTS saved_questions (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at timestamptz DEFAULT now(),
+  user_id uuid REFERENCES auth.users(id),
+  question_data jsonb NOT NULL
+);
+
+-- 2. Enable Row Level Security (RLS)
+-- This prevents anyone from accessing data unless a policy allows it.
+ALTER TABLE saved_questions ENABLE ROW LEVEL SECURITY;
+
+-- 3. Create the Security Policy
+-- Only the user who created the record (user_id matches their auth.uid()) 
+-- can view, insert, update, or delete it.
+CREATE POLICY "User can access own saved questions" ON saved_questions 
+FOR ALL 
+USING (auth.uid() = user_id) 
+WITH CHECK (auth.uid() = user_id);
+
+-- ============================================================
+-- Setup Complete!
+-- ============================================================
