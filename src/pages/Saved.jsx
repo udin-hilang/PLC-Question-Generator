@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as bootstrap from 'bootstrap';
 import html2pdf from 'html2pdf.js';
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
@@ -17,7 +16,8 @@ const Saved = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editPrompt, setEditPrompt] = useState('');
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
-  const exportBtnRef = useRef(null);
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const selectedQuestion = savedQuestions.find(q => q.id === selectedId);
 
@@ -38,11 +38,21 @@ const Saved = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedQuestion && exportBtnRef.current) {
-      // Manually initialize Bootstrap dropdown for dynamically rendered element
-      new bootstrap.Dropdown(exportBtnRef.current);
-    }
-  }, [selectedQuestion]);
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsExportOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsExportOpen(false);
+  }, [selectedId]);
   const fetchSavedQuestions = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -586,23 +596,22 @@ Do not include any conversational text. Return ONLY the JSON object.`;
                           alert('Copied to clipboard!');
                         }}>Copy Text</button>
                         <button className="btn-edit" onClick={() => setIsEditing(true)}>Edit Question</button>
-                        <div className="dropdown">
-                          <button 
-                            ref={exportBtnRef}
-                            className="btn-export dropdown-toggle" 
-                            type="button" 
-                            data-bs-toggle="dropdown" 
-                            aria-expanded="false"
+                        <div className="dropdown" ref={dropdownRef}>
+                          <button
+                            className="btn-export dropdown-toggle"
+                            type="button"
+                            onClick={() => setIsExportOpen(!isExportOpen)}
+                            aria-expanded={isExportOpen}
                           >
                             Export
                           </button>
-                          <ul className="dropdown-menu">
-                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportPDF(); }}>PDF</a></li>
-                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportDocx(); }}>DOCX</a></li>
-                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportFlowchartPDF(); }}>Flowchart (PDF)</a></li>
-                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportJSON(); }}>JSON</a></li>
-                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportTXT(); }}>TXT</a></li>
-                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportImage(); }}>Image</a></li>
+                          <ul className={`dropdown-menu ${isExportOpen ? 'show' : ''}`} style={{ position: 'absolute', right: 0 }}>
+                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportPDF(); setIsExportOpen(false); }}>PDF</a></li>
+                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportDocx(); setIsExportOpen(false); }}>DOCX</a></li>
+                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportFlowchartPDF(); setIsExportOpen(false); }}>Flowchart (PDF)</a></li>
+                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportJSON(); setIsExportOpen(false); }}>JSON</a></li>
+                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportTXT(); setIsExportOpen(false); }}>TXT</a></li>
+                            <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleExportImage(); setIsExportOpen(false); }}>Image</a></li>
                           </ul>
                         </div>
                       </div>
