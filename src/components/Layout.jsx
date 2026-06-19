@@ -4,6 +4,68 @@ import '../assets/Layout.css';
 import { supabase } from '../lib/supabaseClient';
 import { Offcanvas } from 'bootstrap';
 
+const NavLinks = ({ isMobile = false, isActive, closeOffcanvas, handleLogout, user }) => (
+  <>
+    <li className="nav-item">
+      <Link
+        to="/"
+        className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/') ? 'btn-glass-active' : ''}`}
+        onClick={isMobile ? closeOffcanvas : undefined}
+      >
+        Dashboard
+      </Link>
+    </li>
+    <li className="nav-item">
+      <Link
+        to="/generator"
+        className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/generator') ? 'btn-glass-active' : ''}`}
+        onClick={isMobile ? closeOffcanvas : undefined}
+      >
+        Question Generator
+      </Link>
+    </li>
+    <li className="nav-item">
+      <Link
+        to="/saved"
+        className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/saved') ? 'btn-glass-active' : ''}`}
+        onClick={isMobile ? closeOffcanvas : undefined}
+      >
+        Saved
+      </Link>
+    </li>
+    <li className="nav-item">
+      <Link
+        to="/settings"
+        className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/settings') ? 'btn-glass-active' : ''}`}
+        onClick={isMobile ? closeOffcanvas : undefined}
+      >
+        Settings
+      </Link>
+    </li>
+    <li className={`nav-item ${isMobile ? 'mt-4' : 'ms-lg-3'}`}>
+      {user ? (
+        <button
+          onClick={() => {
+            if (isMobile) closeOffcanvas();
+            handleLogout();
+          }}
+          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2 text-danger' : 'px-3 text-danger'}`}
+        >
+          Logout
+        </button>
+      ) : (
+        <Link
+          to="/auth"
+          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/auth') ? 'btn-glass-active' : ''}`}
+          onClick={isMobile ? closeOffcanvas : undefined}
+        >
+          Login
+        </Link>
+      )}
+    </li>
+  </>
+);
+
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -73,67 +135,6 @@ const Layout = () => {
     return '';
   };
 
-  const NavLinks = ({ isMobile = false }) => (
-    <>
-      <li className="nav-item">
-        <Link
-          to="/"
-          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/') ? 'btn-glass-active' : ''}`}
-          onClick={isMobile ? closeOffcanvas : undefined}
-        >
-          Dashboard
-        </Link>
-      </li>
-      <li className="nav-item">
-        <Link
-          to="/generator"
-          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/generator') ? 'btn-glass-active' : ''}`}
-          onClick={isMobile ? closeOffcanvas : undefined}
-        >
-          Question Generator
-        </Link>
-      </li>
-      <li className="nav-item">
-        <Link
-          to="/saved"
-          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/saved') ? 'btn-glass-active' : ''}`}
-          onClick={isMobile ? closeOffcanvas : undefined}
-        >
-          Saved
-        </Link>
-      </li>
-      <li className="nav-item">
-        <Link
-          to="/settings"
-          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/settings') ? 'btn-glass-active' : ''}`}
-          onClick={isMobile ? closeOffcanvas : undefined}
-        >
-          Settings
-        </Link>
-      </li>
-      <li className={`nav-item ${isMobile ? 'mt-4' : 'ms-lg-3'}`}>
-        {user ? (
-          <button
-            onClick={() => {
-              if (isMobile) closeOffcanvas();
-              handleLogout();
-            }}
-            className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2 text-danger' : 'px-3 text-danger'}`}
-          >
-            Logout
-          </button>
-        ) : (
-          <Link
-            to="/auth"
-            className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/auth') ? 'btn-glass-active' : ''}`}
-            onClick={isMobile ? closeOffcanvas : undefined}
-          >
-            Login
-          </Link>
-        )}
-      </li>
-    </>
-  );
   return (
     <div className={`main-content ${getThemeClass()}`}>
       <div className="global-grid-overlay"></div>
@@ -150,9 +151,15 @@ const Layout = () => {
           </button>
 
           {/* Desktop Navigation - only visible on lg+ */}
-          <div className="collapse navbar-collapse d-none d-lg-flex justify-content-end">
+          <div className="d-none d-lg-flex justify-content-end">
             <ul className="navbar-nav gap-3 align-items-center">
-              <NavLinks isMobile={false} />
+              <NavLinks 
+                isMobile={false} 
+                isActive={isActive} 
+                closeOffcanvas={closeOffcanvas} 
+                handleLogout={handleLogout} 
+                user={user} 
+              />
             </ul>
           </div>
         </div>
@@ -172,7 +179,13 @@ const Layout = () => {
         </div>
         <div className="offcanvas-body">
           <ul className="navbar-nav gap-3">
-            <NavLinks isMobile={true} />
+            <NavLinks 
+              isMobile={true} 
+              isActive={isActive} 
+              closeOffcanvas={closeOffcanvas} 
+              handleLogout={handleLogout} 
+              user={user} 
+            />
           </ul>
         </div>
       </div>
