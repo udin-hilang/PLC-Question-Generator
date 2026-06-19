@@ -247,3 +247,30 @@
         text-align: center;
     }
 }
+
+/* Offcanvas Sidebar Styles */
+.offcanvas {
+    background: rgba(0, 0, 51, 0.8) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+.theme-green .offcanvas {
+    background: rgba(0, 51, 0, 0.8) !important;
+    border-left: 1px solid rgba(0, 255, 136, 0.3) !important;
+}
+
+.offcanvas-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+}
+
+.theme-green .offcanvas-header {
+    border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.offcanvas-body {
+    padding: 1.5rem;
+}
