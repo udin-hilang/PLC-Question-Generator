@@ -51,11 +51,16 @@ const Layout = () => {
     navigate('/');
   };
 
+  const closeOffcanvas = () => {
+    if (offcanvasInstance.current) {
+      offcanvasInstance.current.hide();
+    }
+  };
+
   const toggleOffcanvas = () => {
     if (offcanvasInstance.current) {
       offcanvasInstance.current.toggle();
     } else if (offcanvasRef.current) {
-      // Fallback if instance wasn't initialized
       offcanvasInstance.current = new Offcanvas(offcanvasRef.current);
       offcanvasInstance.current.toggle();
     }
@@ -71,36 +76,40 @@ const Layout = () => {
   const NavLinks = ({ isMobile = false }) => (
     <>
       <li className="nav-item">
-        <Link 
-          to="/" 
-          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/') ? 'btn-glass-active' : ''}`} 
+        <Link
+          to="/"
+          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/') ? 'btn-glass-active' : ''}`}
+          onClick={isMobile ? closeOffcanvas : undefined}
           data-bs-dismiss="offcanvas"
         >
           Dashboard
         </Link>
       </li>
       <li className="nav-item">
-        <Link 
-          to="/generator" 
-          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/generator') ? 'btn-glass-active' : ''}`} 
+        <Link
+          to="/generator"
+          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/generator') ? 'btn-glass-active' : ''}`}
+          onClick={isMobile ? closeOffcanvas : undefined}
           data-bs-dismiss="offcanvas"
         >
           Question Generator
         </Link>
       </li>
       <li className="nav-item">
-        <Link 
-          to="/saved" 
-          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/saved') ? 'btn-glass-active' : ''}`} 
+        <Link
+          to="/saved"
+          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/saved') ? 'btn-glass-active' : ''}`}
+          onClick={isMobile ? closeOffcanvas : undefined}
           data-bs-dismiss="offcanvas"
         >
           Saved
         </Link>
       </li>
       <li className="nav-item">
-        <Link 
-          to="/settings" 
-          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/settings') ? 'btn-glass-active' : ''}`} 
+        <Link
+          to="/settings"
+          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/settings') ? 'btn-glass-active' : ''}`}
+          onClick={isMobile ? closeOffcanvas : undefined}
           data-bs-dismiss="offcanvas"
         >
           Settings
@@ -109,16 +118,20 @@ const Layout = () => {
       <li className={`nav-item ${isMobile ? 'mt-4' : 'ms-lg-3'}`}>
         {user ? (
           <button
-            onClick={() => { handleLogout(); }}
+            onClick={() => { 
+              if (isMobile) closeOffcanvas();
+              handleLogout(); 
+            }}
             className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2 text-danger' : 'px-3 text-danger'}`}
             data-bs-dismiss="offcanvas"
           >
             Logout
           </button>
         ) : (
-          <Link 
-            to="/auth" 
-            className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/auth') ? 'btn-glass-active' : ''}`} 
+          <Link
+            to="/auth"
+            className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/auth') ? 'btn-glass-active' : ''}`}
+            onClick={isMobile ? closeOffcanvas : undefined}
             data-bs-dismiss="offcanvas"
           >
             Login
@@ -127,7 +140,6 @@ const Layout = () => {
       </li>
     </>
   );
-
   return (
     <div className={`main-content ${getThemeClass()}`}>
       <div className="global-grid-overlay"></div>
