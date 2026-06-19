@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import * as bootstrap from 'bootstrap';
 import html2pdf from 'html2pdf.js';
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
@@ -16,6 +17,7 @@ const Saved = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editPrompt, setEditPrompt] = useState('');
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
+  const exportBtnRef = useRef(null);
 
   const selectedQuestion = savedQuestions.find(q => q.id === selectedId);
 
@@ -23,7 +25,7 @@ const Saved = () => {
     const checkUserAndFetch = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       const isLocalhost = window.location.hostname === 'localhost';
-      
+
       if (!user && !isLocalhost) {
         alert('Please login to view your saved questions!');
         navigate('/auth');
@@ -35,6 +37,12 @@ const Saved = () => {
     checkUserAndFetch();
   }, []);
 
+  useEffect(() => {
+    if (selectedQuestion && exportBtnRef.current) {
+      // Manually initialize Bootstrap dropdown for dynamically rendered element
+      new bootstrap.Dropdown(exportBtnRef.current);
+    }
+  }, [selectedQuestion]);
   const fetchSavedQuestions = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -579,7 +587,13 @@ Do not include any conversational text. Return ONLY the JSON object.`;
                         }}>Copy Text</button>
                         <button className="btn-edit" onClick={() => setIsEditing(true)}>Edit Question</button>
                         <div className="dropdown">
-                          <button className="btn-export dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <button 
+                            ref={exportBtnRef}
+                            className="btn-export dropdown-toggle" 
+                            type="button" 
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false"
+                          >
                             Export
                           </button>
                           <ul className="dropdown-menu">
