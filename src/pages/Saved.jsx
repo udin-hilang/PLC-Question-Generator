@@ -22,7 +22,9 @@ const Saved = () => {
   useEffect(() => {
     const checkUserAndFetch = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      const isLocalhost = window.location.hostname === 'localhost';
+      
+      if (!user && !isLocalhost) {
         alert('Please login to view your saved questions!');
         navigate('/auth');
         return;
@@ -35,6 +37,16 @@ const Saved = () => {
 
   const fetchSavedQuestions = async () => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const isLocalhost = window.location.hostname === 'localhost';
+
+      if (!user && isLocalhost) {
+        // Load from localStorage for guest mode on localhost
+        const localSaved = JSON.parse(localStorage.getItem('plc_saved_questions_local') || '[]');
+        setSavedQuestions(localSaved);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('saved_questions')
         .select('*')
@@ -57,6 +69,18 @@ const Saved = () => {
   const deleteQuestion = async (id) => {
     if (window.confirm('Are you sure you want to delete this saved question?')) {
       try {
+        const { data: { user } } = await supabase.auth.getUser();
+        const isLocalhost = window.location.hostname === 'localhost';
+
+        if (!user && isLocalhost) {
+          const localSaved = JSON.parse(localStorage.getItem('plc_saved_questions_local') || '[]');
+          const filtered = localSaved.filter(q => q.id !== id);
+          localStorage.setItem('plc_saved_questions_local', JSON.stringify(filtered));
+          setSavedQuestions(filtered);
+          if (selectedId === id) setSelectedId(null);
+          return;
+        }
+
         const { error } = await supabase
           .from('saved_questions')
           .delete()
@@ -124,13 +148,29 @@ Do not include any conversational text. Return ONLY the JSON object.`;
 
       const updatedData = JSON.parse(jsonMatch[0]);
 
+      const { data: { user } } = await supabase.auth.getUser();
+      const isLocalhost = window.location.hostname === 'localhost';
+
+      if (!user && isLocalhost) {
+        const localSaved = JSON.parse(localStorage.getItem('plc_saved_questions_local') || '[]');
+        const updatedLocal = localSaved.map(q => 
+          q.id === selectedId ? { ...q, data: updatedData } : q
+        );
+        localStorage.setItem('plc_saved_questions_local', JSON.stringify(updatedLocal));
+        setSavedQuestions(updatedLocal);
+        setEditPrompt('');
+        setIsEditing(false);
+        alert('Question updated successfully in local storage!');
+        return;
+      }
+
       const { error: updateError } = await supabase
         .from('saved_questions')
-        .update({ 
-          question_data: { 
-            ...selectedQuestion, 
-            data: updatedData 
-          } 
+        .update({
+          question_data: {
+            ...selectedQuestion,
+            data: updatedData
+          }
         })
         .eq('id', selectedId);
 

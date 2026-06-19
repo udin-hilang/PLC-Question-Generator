@@ -62,8 +62,23 @@ const Generator = () => {
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      
+      const isLocalhost = window.location.hostname === 'localhost';
+
       if (!user) {
+        if (isLocalhost) {
+          // Fallback to localStorage for local development
+          const localSaved = JSON.parse(localStorage.getItem('plc_saved_questions_local') || '[]');
+          const newEntry = {
+            id: Date.now().toString(), // Simple unique ID for local
+            date: new Date().toLocaleString(),
+            config: formData,
+            data: result.data
+          };
+          localStorage.setItem('plc_saved_questions_local', JSON.stringify([...localSaved, newEntry]));
+          alert('Saved locally (Guest Mode) since you are on localhost!');
+          return;
+        }
+
         alert('Please login first to save questions!');
         window.location.href = '/auth';
         return;
@@ -72,19 +87,19 @@ const Generator = () => {
       const { error } = await supabase
         .from('saved_questions')
         .insert([
-          { 
+          {
             user_id: user.id,
             question_data: {
               date: new Date().toLocaleString(),
               config: formData,
               data: result.data
-            } 
+            }
           }
         ])
         .select();
 
       if (error) throw error;
-      
+
       alert('Question saved successfully to your account!');
     } catch (error) {
       console.error('Save Error:', error);
