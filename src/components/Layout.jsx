@@ -68,6 +68,66 @@ const Layout = () => {
     return '';
   };
 
+  const NavLinks = ({ isMobile = false }) => (
+    <>
+      <li className="nav-item">
+        <Link 
+          to="/" 
+          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/') ? 'btn-glass-active' : ''}`} 
+          data-bs-dismiss="offcanvas"
+        >
+          Dashboard
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link 
+          to="/generator" 
+          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/generator') ? 'btn-glass-active' : ''}`} 
+          data-bs-dismiss="offcanvas"
+        >
+          Question Generator
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link 
+          to="/saved" 
+          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/saved') ? 'btn-glass-active' : ''}`} 
+          data-bs-dismiss="offcanvas"
+        >
+          Saved
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link 
+          to="/settings" 
+          className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/settings') ? 'btn-glass-active' : ''}`} 
+          data-bs-dismiss="offcanvas"
+        >
+          Settings
+        </Link>
+      </li>
+      <li className={`nav-item ${isMobile ? 'mt-4' : 'ms-lg-3'}`}>
+        {user ? (
+          <button
+            onClick={() => { handleLogout(); }}
+            className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2 text-danger' : 'px-3 text-danger'}`}
+            data-bs-dismiss="offcanvas"
+          >
+            Logout
+          </button>
+        ) : (
+          <Link 
+            to="/auth" 
+            className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/auth') ? 'btn-glass-active' : ''}`} 
+            data-bs-dismiss="offcanvas"
+          >
+            Login
+          </Link>
+        )}
+      </li>
+    </>
+  );
+
   return (
     <div className={`main-content ${getThemeClass()}`}>
       <div className="global-grid-overlay"></div>
@@ -83,60 +143,34 @@ const Layout = () => {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          {/* Single Navigation Container (Works for both Mobile and Desktop) */}
-          <div
-            className="offcanvas offcanvas-end"
-            tabIndex="-1"
-            id="offcanvasNavbar"
-            ref={offcanvasRef}
-            aria-labelledby="offcanvasNavbarLabel"
-          >
-            <div className="offcanvas-header">
-              <h5 className="offcanvas-title brand-logo" id="offcanvasNavbarLabel">PLC Question Generator</h5>
-              <button type="button" className="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div className="offcanvas-body">
-              <ul className="navbar-nav gap-3">
-                <li className="nav-item">
-                  <Link to="/" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
-                    Dashboard
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="/generator" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/generator') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
-                    Question Generator
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="/saved" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/saved') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
-                    Saved
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="/settings" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/settings') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
-                    Settings
-                  </Link>
-                </li>
-                <li className="nav-item mt-4">
-                  {user ? (
-                    <button
-                      onClick={() => { handleLogout(); }}
-                      className="btn btn-glass w-100 text-start px-3 py-2 text-danger"
-                      data-bs-dismiss="offcanvas"
-                    >
-                      Logout
-                    </button>
-                  ) : (
-                    <Link to="/auth" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/auth') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
-                      Login
-                    </Link>
-                  )}
-                </li>
-              </ul>
-            </div>
+          {/* Desktop Navigation - only visible on lg+ */}
+          <div className="collapse navbar-collapse d-none d-lg-flex justify-content-end">
+            <ul className="navbar-nav gap-3 align-items-center">
+              <NavLinks isMobile={false} />
+            </ul>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Navigation - Offcanvas (Outside nav to avoid backdrop-filter containing block issue) */}
+      <div
+        className="offcanvas offcanvas-end"
+        tabIndex="-1"
+        id="offcanvasNavbar"
+        ref={offcanvasRef}
+        aria-labelledby="offcanvasNavbarLabel"
+      >
+        <div className="offcanvas-header">
+          <h5 className="offcanvas-title brand-logo" id="offcanvasNavbarLabel">PLC Question Generator</h5>
+          <button type="button" className="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div className="offcanvas-body">
+          <ul className="navbar-nav gap-3">
+            <NavLinks isMobile={true} />
+          </ul>
+        </div>
+      </div>
+
       {/* Page Content */}
       <div className="container-fluid p-4">
         <Outlet />
