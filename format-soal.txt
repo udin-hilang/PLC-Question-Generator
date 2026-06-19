@@ -1,0 +1,27 @@
+FORMAT STRUKTUR SOAL PLC (Berdasarkan contoh-soal.txt)
+====================================================
+
+1. NARASI SKENARIO (STORY-TELLING)
+----------------------------------
+Sajikan dalam bentuk narasi yang mengalir, terdiri dari:
+- Pengenalan Sistem: Penjelasan umum tentang sistem apa yang dibangun dan daftar komponen utama (Push Button, Sensor, Actuator, Layar/HMI).
+- Urutan Operasi (Sequence of Operation):
+    a. Inisialisasi: Bagaimana sistem dinyalakan/siap digunakan (contoh: PB ON -> Lampu Indikator).
+    b. Proses Utama (Masuk/Start): Alur kerja dari trigger awal hingga mencapai kondisi target (termasuk delay timer, aksi actuator, dan sensor konfirmasi).
+    c. Kondisi Steady-State: Apa yang terjadi selama sistem berada dalam kondisi aktif/menunggu (contoh: penghitungan biaya, lampu berkedip/blinking).
+    d. Proses Pengakhiran (Keluar/Stop): Alur kerja untuk mengakhiri proses atau mengeluarkan objek dari sistem.
+    e. Output Akhir: Informasi apa yang ditampilkan setelah proses selesai (contoh: total harga di alamat memory tertentu).
+    f. Kondisi Reset: Syarat agar sistem kembali ke keadaan awal.
+
+2. TABEL I/O (MAPPING)
+----------------------
+Sajikan dalam bentuk tabel dengan kolom:
+- Input: Nama Komponen | Alamat I/O
+- Output: Nama Komponen | Alamat I/O
+
+3. CATATAN TEKNIS (TECHNICAL NOTES)
+----------------------------------
+Tambahkan detail spesifik yang tidak masuk dalam tabel, seperti:
+- Logika aktif/non-aktif (contoh: ON = Terbuka, OFF = Tertutup).
+- Alamat Memory/Register khusus (contoh: D100 untuk data angka).
+- Detail waktu (contoh: Timer 15 detik, Blinking 1s ON / 1s OFF).

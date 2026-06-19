@@ -1,0 +1,34 @@
+1. Dalam sebuah system garasi berbayar terdapat sebuah Push Button ON dan OFF, Push
+button untuk membuka pintu garasi, Push button reset, Sensor didalam garasi, Sensor
+diluar garasi, conveyor untuk membawa mobil kedalam garasi secara otomatis, dan
+sebuah layar untuk menampilkan Harga yang harus dibayar.
+2. Ketika Push Button On ditekan, system akan ON dan lampu indicator ON akan menyala
+dan garasi siap digunakan.
+3. Ketika sensor diluar mendeteksi ada mobil didepan garasi, maka
+4. Ketika push button pintu ditekan, pintu garasi akan membuka.
+5. Setelah 15 detik, conveyor akan bekerja untuk membawa mobil dari depan garasi
+masuk kedalam garasi.
+6. Setelah sensor didalam garasi mendeteksi bahwa mobil sudah didalam, maka conveyor
+akan berhenti.
+7. Setelah itu pintu garasi langsung menutup kembali.
+8. Selama mobil didalam system akan menghitung tiap menitnya dengan harga Rp. 200
+9. Selama mobil didalam Lampu indicator biru akan berkedip 1 detik nyala 1 detik mati.
+10. Ketika mobil didalam, lalu push button pintu ditekan maka pintu akan membuka.
+11. Setelah 15 detik, conveyor akan bekerja mundur untuk membawa mobil keluar dari
+dalam garasi.
+12. Ketika sensor luar garasi telah mendeteksi bahwa mobil didepan, maka Conveyor akan
+berhenti dan pintu akan menutup kembali.
+13. Setelah itu, Total harga yang harus dibayar akan ditampilkan di layar.
+14. Alamat yang ditampilkan di layar adalah D100
+15. Setelah mobil pergi (artinya sensor luar sudah tidak mendeteksi ada mobil didepan)
+maka Sistem akan kembali seperti awal lagi.
+Input Alamat Output Alamat
+PB ON 0.00 Pintu Garasi 100.00
+PB OFF 0.01 Conveyor maju 100.01
+PB Pintu 0.02 Conveyor mundur 100.02
+Sensor dalam 0.03 Indikator ON 100.03
+Sensor luar 0.04 Indikator OFF 100.04
+Indikator Biru 100.05
+Note*
+Pintu garasi terbuka ketika 100.00 dalam kondisi ON
+Pintu garasi tertutup ketika 100.00 dalam kondisi OFF

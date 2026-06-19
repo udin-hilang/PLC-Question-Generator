@@ -1,0 +1,22 @@
+Flowchart Error: Parse error on line 9: ... --> I[Proses Waktu (Timer)] I --> J -----------------------^ Expecting 'SQE', 'DOUBLECIRCLEEND', 'PE', '-)', 'STADIUMEND', 'SUBROUTINEEND', 'PIPE', 'CYLINDEREND', 'DIAMOND_STOP', 'TAGEND', 'TRAPEND', 'INVTRAPEND', 'UNICODE_TEXT', 'TEXT', 'TAGSTART', got 'PS'
+
+graph TD
+    A[Start: Inisialisasi] --> B{E-Stop Aktif?}
+    B -- Yes --> C[Stop Semua Output & Reset ke Awal]
+    B -- No --> D{Tombol Reset Ditekan?}
+    D -- Yes --> E[Reset Counter & Timer]
+    E --> F{Tombol Start Ditekan?}
+    F -- Yes --> G[Latching System & Lampu ON]
+    G --> H[Aktifkan Motor Konveyor]
+    H --> I{Sensor Kehadiran?}
+    I -- Timeout --> J[Nyalakan Alarm]
+    I -- Yes --> K[Stop Konveyor]
+    K --> L[Buka Solenoid Pembersih]
+    L --> M[Proses Timer Pembersihan]
+    M --> N[Tutup Solenoid]
+    N --> O[Inkrementasi Counter & Statistik]
+    O --> P{Counter >= Target?}
+    P -- No --> H
+    P -- Yes --> Q[Stop Halus & Standby]
+    Q --> D
+    C --> D
