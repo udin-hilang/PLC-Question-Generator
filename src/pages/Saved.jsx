@@ -17,6 +17,8 @@ const Saved = () => {
   const [editPrompt, setEditPrompt] = useState('');
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
 
+  const selectedQuestion = savedQuestions.find(q => q.id === selectedId);
+
   useEffect(() => {
     const checkUserAndFetch = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -151,24 +153,27 @@ Do not include any conversational text. Return ONLY the JSON object.`;
   };
 
   const prepareExportContent = async (selectedQuestion, includeFlowchart = true) => {
-    // 1. Encode Mermaid code for mermaid.ink
-    const flowchartCode = selectedQuestion.data.flowchart_code;
-    const encodedChart = btoa(unescape(encodeURIComponent(flowchartCode)));
-    const chartUrl = `https://mermaid.ink/img/${encodedChart}`;
+    let base64Chart = '';
+    if (includeFlowchart) {
+      // 1. Encode Mermaid code for mermaid.ink
+      const flowchartCode = selectedQuestion.data.flowchart_code;
+      const encodedChart = btoa(unescape(encodeURIComponent(flowchartCode)));
+      const chartUrl = `https://mermaid.ink/img/${encodedChart}`;
 
-    // 2. Convert image to Base64 to avoid CORS/Async loading issues
-    const fetchImageAsBase64 = async (url) => {
-      const response = await fetch(url);
-      const blob = await response.blob();
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-    };
+      // 2. Convert image to Base64 to avoid CORS/Async loading issues
+      const fetchImageAsBase64 = async (url) => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      };
 
-    const base64Chart = await fetchImageAsBase64(chartUrl);
+      base64Chart = await fetchImageAsBase64(chartUrl);
+    }
 
     // 3. Create a temporary element for professional styling
     const element = document.createElement('div');
@@ -257,8 +262,6 @@ Do not include any conversational text. Return ONLY the JSON object.`;
   };
 
   const handleExportDocx = async () => {
-    if (!selectedId) return;
-    const selectedQuestion = savedQuestions.find(q => q.id === selectedId);
     if (!selectedQuestion) return;
 
     try {
@@ -472,8 +475,7 @@ Do not include any conversational text. Return ONLY the JSON object.`;
       alert('Failed to export image. Please try again.');
     }
   };
-  const selectedQuestion = savedQuestions.find(q => q.id === selectedId);
-
+  
   return (
     <div className="generator-container">
       <div className="d-flex justify-content-between align-items-center pt-3 pb-2 mb-5">
