@@ -54,6 +54,10 @@ const Layout = () => {
   const toggleOffcanvas = () => {
     if (offcanvasInstance.current) {
       offcanvasInstance.current.toggle();
+    } else if (offcanvasRef.current) {
+      // Fallback if instance wasn't initialized
+      offcanvasInstance.current = new Offcanvas(offcanvasRef.current);
+      offcanvasInstance.current.toggle();
     }
   };
 
@@ -79,96 +83,57 @@ const Layout = () => {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav mx-auto gap-2">
-              <li className="nav-item">
-                <Link to="/" className={`btn btn-sm px-3 btn-glass ${isActive('/') ? 'btn-glass-active' : ''}`}>
-                  Dashboard
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/generator" className={`btn btn-sm px-3 btn-glass ${isActive('/generator') ? 'btn-glass-active' : ''}`}>
-                  Question Generator
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/saved" className={`btn btn-sm px-3 btn-glass ${isActive('/saved') ? 'btn-glass-active' : ''}`}>
-                  Saved
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/settings" className={`btn btn-sm px-3 btn-glass ${isActive('/settings') ? 'btn-glass-active' : ''}`}>
-                  Settings
-                </Link>
-              </li>
-              <li className="nav-item ms-lg-3">
-                {user ? (
-                  <button
-                    onClick={handleLogout}
-                    className="btn btn-sm px-3 btn-glass text-danger"
-                  >
-                    Logout
-                  </button>
-                ) : (
-                  <Link to="/auth" className={`btn btn-sm px-3 btn-glass ${isActive('/auth') ? 'btn-glass-active' : ''}`}>
-                    Login
+          {/* Single Navigation Container (Works for both Mobile and Desktop) */}
+          <div
+            className="offcanvas offcanvas-end"
+            tabIndex="-1"
+            id="offcanvasNavbar"
+            ref={offcanvasRef}
+            aria-labelledby="offcanvasNavbarLabel"
+          >
+            <div className="offcanvas-header">
+              <h5 className="offcanvas-title brand-logo" id="offcanvasNavbarLabel">PLC Question Generator</h5>
+              <button type="button" className="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div className="offcanvas-body">
+              <ul className="navbar-nav gap-3">
+                <li className="nav-item">
+                  <Link to="/" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
+                    Dashboard
                   </Link>
-                )}
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Mobile Sidebar (Offcanvas) */}
-        <div 
-          className="offcanvas offcanvas-end" 
-          tabIndex="-1" 
-          id="offcanvasNavbar" 
-          ref={offcanvasRef}
-          aria-labelledby="offcanvasNavbarLabel"
-        >
-          <div className="offcanvas-header">
-            <h5 className="offcanvas-title brand-logo" id="offcanvasNavbarLabel">PLC Question Generator</h5>
-            <button type="button" className="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div className="offcanvas-body">
-            <ul className="navbar-nav gap-3">
-              <li className="nav-item">
-                <Link to="/" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
-                  Dashboard
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/generator" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/generator') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
-                  Question Generator
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/saved" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/saved') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
-                  Saved
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/settings" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/settings') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
-                  Settings
-                </Link>
-              </li>
-              <li className="nav-item mt-4">
-                {user ? (
-                  <button
-                    onClick={() => { handleLogout(); }}
-                    className="btn btn-glass w-100 text-start px-3 py-2 text-danger"
-                    data-bs-dismiss="offcanvas"
-                  >
-                    Logout
-                  </button>
-                ) : (
-                  <Link to="/auth" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/auth') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
-                    Login
+                </li>
+                <li className="nav-item">
+                  <Link to="/generator" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/generator') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
+                    Question Generator
                   </Link>
-                )}
-              </li>
-            </ul>
+                </li>
+                <li className="nav-item">
+                  <Link to="/saved" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/saved') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
+                    Saved
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/settings" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/settings') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
+                    Settings
+                  </Link>
+                </li>
+                <li className="nav-item mt-4">
+                  {user ? (
+                    <button
+                      onClick={() => { handleLogout(); }}
+                      className="btn btn-glass w-100 text-start px-3 py-2 text-danger"
+                      data-bs-dismiss="offcanvas"
+                    >
+                      Logout
+                    </button>
+                  ) : (
+                    <Link to="/auth" className={`btn btn-glass w-100 text-start px-3 py-2 ${isActive('/auth') ? 'btn-glass-active' : ''}`} data-bs-dismiss="offcanvas">
+                      Login
+                    </Link>
+                  )}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </nav>
