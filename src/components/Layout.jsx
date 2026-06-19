@@ -80,7 +80,6 @@ const Layout = () => {
           to="/"
           className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/') ? 'btn-glass-active' : ''}`}
           onClick={isMobile ? closeOffcanvas : undefined}
-          data-bs-dismiss="offcanvas"
         >
           Dashboard
         </Link>
@@ -90,7 +89,6 @@ const Layout = () => {
           to="/generator"
           className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/generator') ? 'btn-glass-active' : ''}`}
           onClick={isMobile ? closeOffcanvas : undefined}
-          data-bs-dismiss="offcanvas"
         >
           Question Generator
         </Link>
@@ -100,7 +98,6 @@ const Layout = () => {
           to="/saved"
           className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/saved') ? 'btn-glass-active' : ''}`}
           onClick={isMobile ? closeOffcanvas : undefined}
-          data-bs-dismiss="offcanvas"
         >
           Saved
         </Link>
@@ -110,7 +107,6 @@ const Layout = () => {
           to="/settings"
           className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/settings') ? 'btn-glass-active' : ''}`}
           onClick={isMobile ? closeOffcanvas : undefined}
-          data-bs-dismiss="offcanvas"
         >
           Settings
         </Link>
@@ -118,12 +114,11 @@ const Layout = () => {
       <li className={`nav-item ${isMobile ? 'mt-4' : 'ms-lg-3'}`}>
         {user ? (
           <button
-            onClick={() => { 
+            onClick={() => {
               if (isMobile) closeOffcanvas();
-              handleLogout(); 
+              handleLogout();
             }}
             className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2 text-danger' : 'px-3 text-danger'}`}
-            data-bs-dismiss="offcanvas"
           >
             Logout
           </button>
@@ -132,7 +127,6 @@ const Layout = () => {
             to="/auth"
             className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/auth') ? 'btn-glass-active' : ''}`}
             onClick={isMobile ? closeOffcanvas : undefined}
-            data-bs-dismiss="offcanvas"
           >
             Login
           </Link>
