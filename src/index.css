@@ -33,12 +33,12 @@
 @keyframes summon {
   0% {
     opacity: 0;
-    filter: blur(12px);
     transform: translateY(20px) scale(0.98);
+    /* filter:blur() DIHAPUS — menyebabkan stacking context baru yang
+       merusak backdrop-filter pada semua child elements */
   }
   100% {
     opacity: 1;
-    filter: blur(0);
     transform: translateY(0) scale(1);
   }
 }
@@ -70,6 +70,16 @@
 body {
   margin: 0;
   padding: 0;
+  /* Override Bootstrap's body { background-color: #fff }.
+     HARUS transparent (bukan warna gelap) — karena body adalah block-level
+     element yang dirender DI ATAS elemen z-index negatif (.bg-layer, .global-grid-overlay).
+     Jika body punya warna opaque, grid dan bg-layer akan tertutup. */
+  background-color: transparent !important;
+}
+
+html {
+  /* Canvas fallback — tampil sebelum .bg-layer merender */
+  background-color: #000011;
 }
 
 .global-grid-overlay {

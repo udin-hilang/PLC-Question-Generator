@@ -2,29 +2,26 @@
     from {
         opacity: 0;
         transform: translateY(-15px) scale(0.97);
-        filter: blur(8px);
+        /* filter:blur dihapus — merusak backdrop-filter children */
     }
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
-        filter: blur(0);
     }
 }
 
 .generator-container {
     position: relative;
-    z-index: 1;
+    /* z-index:1 dihapus — membuat stacking context yang merusak backdrop-filter */
 }
 
 @keyframes summon {
     0% {
         opacity: 0;
-        filter: blur(12px);
         transform: translateY(20px) scale(0.98);
     }
     100% {
         opacity: 1;
-        filter: blur(0);
         transform: translateY(0) scale(1);
     }
 }
@@ -519,12 +516,11 @@
     0% { 
         opacity: 0; 
         transform: translateY(40px) scale(0.9); 
-        filter: blur(10px);
+        /* filter:blur dihapus — merusak backdrop-filter children */
     }
     100% { 
         opacity: 1; 
         transform: translateY(0) scale(1); 
-        filter: blur(0);
     }
 }
 

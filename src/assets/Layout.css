@@ -1,39 +1,32 @@
+/* ─── Background Layer ────────────────────────────────────────────────────────
+   PENTING: Gunakan dedicated div (.bg-layer) bukan ::before/::after.
+   Alasan: ::before/::after dengan z-index negatif di dalam stacking context
+   tidak bisa di-sample oleh backdrop-filter secara reliable di semua browser.
+   .bg-layer adalah position:fixed di z-index:-10, selalu di belakang semua elemen.
+──────────────────────────────────────────────────────────────────────────── */
+.bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -2;  /* -2: di atas canvas HTML (putih), di bawah .global-grid-overlay (-1) */
+    background: linear-gradient(135deg, #000033 0%, #000000 100%);
+    transition: background 0.8s ease;
+    pointer-events: none;
+}
+
+.theme-green .bg-layer {
+    background: linear-gradient(135deg, #003300 0%, #000000 100%);
+}
+
 .main-content {
     width: 100%;
     min-height: 100vh;
     color: white;
     padding-top: 140px;
     position: relative;
-    z-index: 1;
-}
-
-.main-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, #000033 0%, #000000 100%);
-    z-index: -3;
-    transition: opacity 0.8s ease;
-}
-
-.main-content::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, #003300 0%, #000000 100%);
-    z-index: -2;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-}
-
-.theme-green::after {
-    opacity: 1;
+    /* z-index DIHAPUS: tidak perlu stacking context di sini.
+       Dulu z-index:1 menyebabkan ::before/::after terperangkap
+       di dalam stacking context sehingga backdrop-filter tidak bisa
+       melihat background di belakangnya. */
 }
 
 .theme-green .navbar-custom {
