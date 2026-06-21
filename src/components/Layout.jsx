@@ -137,9 +137,6 @@ const Layout = () => {
 
   return (
     <div className={`main-content ${getThemeClass()}`}>
-      {/* Dedicated background layer — fixed, below everything, reliably sampled by backdrop-filter */}
-      <div className="bg-layer" aria-hidden="true" />
-      <div className="global-grid-overlay" aria-hidden="true"></div>
       {/* Top Header / Navbar */}
       <nav className={`navbar navbar-expand-lg navbar-light navbar-custom px-4 ${isScrolled ? 'scrolled' : 'unscrolled'}`}>
         <div className="container-fluid d-flex align-items-center justify-content-between">
