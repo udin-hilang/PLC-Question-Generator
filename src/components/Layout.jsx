@@ -8,8 +8,8 @@ const NavLinks = ({ isMobile = false, isActive, closeOffcanvas, handleLogout, us
   <>
     <li className="nav-item">
       <Link
-        to="/"
-        className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/') ? 'btn-glass-active' : ''}`}
+to="/dashboard"
+        className={`btn btn-glass ${isMobile ? 'w-100 text-start px-3 py-2' : 'px-3'} ${isActive('/dashboard') ? 'btn-glass-active' : ''}`}
         onClick={isMobile ? closeOffcanvas : undefined}
       >
         Dashboard
