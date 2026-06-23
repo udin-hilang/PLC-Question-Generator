@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard';
+import DashboardRoutes from './routes/DashboardRoutes';
 import Generator from './pages/Generator';
 import Saved from './pages/Saved';
 import Auth from './pages/Auth';
@@ -23,8 +23,8 @@ function App() {
         <Route path="/" element={<Layout />}>
           {/* Landing page as the default route */}
           <Route index element={<Landing />} />
-          {/* Dashboard moved to its own route */}
-          <Route path="dashboard" element={<Dashboard />} />
+          {/* Dashboard routes are now handled in a separate module */}
+          <Route path="dashboard/*" element={<DashboardRoutes />} />
           <Route path="generator" element={<Generator />} />
           <Route path="saved" element={<Saved />} />
           <Route path="auth" element={<Auth />} />
