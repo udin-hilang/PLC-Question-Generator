@@ -1,1 +1,8 @@
-/* Landing page styles (currently empty) */
+.landing-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 140px); /* matches padding‑top of .main-content */
+}
+
+/* Reuse hero‑card styles from Dashboard.css – no extra rules needed */
