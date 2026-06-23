@@ -5,4 +5,7 @@
   min-height: calc(100vh - 140px); /* matches padding‑top of .main-content */
 }
 
-/* Reuse hero‑card styles from Dashboard.css – no extra rules needed */
+.hero-card {
+  animation: summon 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
