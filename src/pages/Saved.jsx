@@ -134,6 +134,9 @@ Current Question Data: ${JSON.stringify(selectedQuestion.data)}
 Modification Request: ${editPrompt}
 
 CRITICAL: Provide the updated question in the exact same JSON format. Ensure all Mermaid syntax is valid and starts with 'graph TD'.
+
+FLOWCHART SHAPE RULES: Rectangle [ ] = Process, Diamond { } = Decision (must have -- Yes and -- No outgoing), Parallelogram / = Input/Output, Oval ( ) = Start/End. Node definitions must come before transition lines. No markdown code blocks.
+
 {
   "narrative": "...",
   "io_table": [ { "component": "...", "address": "...", "type": "...", "description": "..." } ],

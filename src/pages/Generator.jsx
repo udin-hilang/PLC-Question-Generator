@@ -162,7 +162,7 @@ const Generator = () => {
         "io_table": [
           { "component": "Nama Komponen", "address": "Alamat I/O", "type": "Input/Output", "description": "Keterangan" }
         ],
-        "flowchart_code": "The raw Mermaid.js graph TD code. STRICT RULES: 1) Start with 'graph TD'. 2) Define nodes simply as 'NodeID[Label]'. 3) Use only 'NodeID1 --> NodeID2' for transitions. 4) NEVER put node definitions inside a transition line (e.g., do NOT do 'A --> B[Label]'; instead do 'B[Label]' then 'A --> B'). 5) Avoid using special characters like brackets or quotes inside labels. 6) No markdown code blocks."
+        "flowchart_code": "The raw Mermaid.js graph TD code. STRICT RULES: 1) Start with 'graph TD'. 2) Define nodes simply as 'NodeID[Label]' (single line, no nested brackets). 3) Use only 'NodeID1 --> NodeID2' for transitions; node definitions MUST come BEFORE transition lines. 4) NEVER put node definitions inside a transition line (e.g., do NOT do 'A --> B[Label]'; instead do 'B[Label]' on its own line, then 'A --> B'). 5) Shape rules: Rectangle [ ] = Process, Diamond { } = Decision (must have -- Yes and -- No outgoing), Parallelogram / = Input/Output, Oval ( ) = Start/End. 6) Avoid using special characters like brackets or quotes inside labels. 7) No markdown code blocks. 8) Reference FLOWCHART_RULES.md for complete shape definitions. 9) Labels must be concise, max 1-3 words, in English or Indonesian without special chars."
       }
 
       Ensure the problem is technically sound and feasible to be programmed on ${formData.plcHardware}.
