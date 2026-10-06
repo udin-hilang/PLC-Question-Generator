@@ -61,7 +61,7 @@
     z-index: 1020;
     background: rgba(0, 0, 51, 0.3);
     backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    webkitBackdropFilter: blur(20px) saturate(160%);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -179,7 +179,7 @@
 .btn-glass {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    webkitBackdropFilter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: rgba(255, 255, 255, 0.8) !important;
     border-radius: 50px;
@@ -255,7 +255,7 @@
 .offcanvas {
     background: rgba(0, 0, 51, 0.8) !important;
     backdrop-filter: blur(25px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    webkitBackdropFilter: blur(25px) saturate(180%) !important;
     border-left: 1px solid rgba(255, 255, 255, 0.2) !important;
     color: white !important;
 }
