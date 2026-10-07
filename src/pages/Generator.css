@@ -407,6 +407,7 @@
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
+    webkitBackdropFilter : blur(25px);
     gap: 10px;
 }
 
